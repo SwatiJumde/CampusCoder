@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        #quiz-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #3498db;
+        }
+
+        p {
+            color: #333;
+        }
+
+        .question {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2ecc71;
+        }
+
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .options button:hover {
+            background-color: #2980b9;
+        }
+
+        #result {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <h1>Quiz Game</h1>
+    <p class="question" id="question"></p>
+    <div class="options" id="options"></div>
+    <button onclick="nextQuestion()">Next</button>
+    <p id="result"></p>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "What is the capital of France?",
+            options: ["Berlin", "Paris", "Madrid", "Rome"],
+            correctAnswer: "Paris"
+        },
+        {
+            question: "Which planet is known as the Red Planet?",
+            options: ["Earth", "Mars", "Venus", "Jupiter"],
+            correctAnswer: "Mars"
+        },
+        {
+            question: "What is the largest mammal in the world?",
+            options: ["Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
+            correctAnswer: "Blue Whale"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const currentQuestion = questions[currentQuestionIndex];
+        document.getElementById("question").innerText = currentQuestion.question;
+
+        const optionsContainer = document.getElementById("options");
+        optionsContainer.innerHTML = "";
+
+        for (const option of currentQuestion.options) {
+            const button = document.createElement("button");
+            button.innerText = option;
+            button.addEventListener("click", () => checkAnswer(option));
+            optionsContainer.appendChild(button);
+        }
+    }
+
+    function checkAnswer(selectedAnswer) {
+        const currentQuestion = questions[currentQuestionIndex];
+
+        if (selectedAnswer === currentQuestion.correctAnswer) {
+            score++;
+        }
+
+        const resultElement = document.getElementById("result");
+        resultElement.innerText = `Score: ${score}`;
+
+        // Disable options after selecting an answer
+        const optionButtons = document.querySelectorAll(".options button");
+        optionButtons.forEach(button => button.setAttribute("disabled", "true"));
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+            // Enable options for the new question
+            const optionButtons = document.querySelectorAll(".options button");
+            optionButtons.forEach(button => button.removeAttribute("disabled"));
+        } else {
+            // Display final score when all questions are answered
+            document.getElementById("question").innerText = "Quiz Completed!";
+            document.getElementById("options").innerHTML = "";
+            document.getElementById("result").innerText = `Final Score: ${score} out of ${questions.length}`;
+        }
+    }
+
+    // Load the first question when the page loads
+    loadQuestion();
+</script>
+
+</body>
+</html>
